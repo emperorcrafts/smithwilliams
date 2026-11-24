@@ -3,103 +3,105 @@
 import { useEffect, useRef, useState } from 'react'
 import { Volume2, VolumeX } from 'lucide-react'
 
+// Connect this player only when the original music asset is restored to the project.
+const ORIGINAL_TRACK: string | null = null
+const VOLUME_KEY = 'sw-music-volume'
+const PREFERENCE_KEY = 'sw-music-preferred'
+
 export function SoundToggle() {
+  const audioRef = useRef<HTMLAudioElement>(null)
   const [enabled, setEnabled] = useState(false)
-  const [available, setAvailable] = useState(true)
-  const contextRef = useRef<AudioContext | null>(null)
-  const masterRef = useRef<GainNode | null>(null)
-  const voicesRef = useRef<OscillatorNode[]>([])
+  const [preferred, setPreferred] = useState(false)
+  const [volume, setVolume] = useState(0.28)
+  const available = ORIGINAL_TRACK !== null
 
   useEffect(() => {
-    setAvailable('AudioContext' in window)
-    return () => {
-      const context = contextRef.current
-      if (context && context.state !== 'closed') void context.close()
+    try {
+      setPreferred(window.localStorage.getItem(PREFERENCE_KEY) === 'on')
+      const storedVolume = window.localStorage.getItem(VOLUME_KEY)
+      if (storedVolume !== null) {
+        const parsedVolume = Number(storedVolume)
+        if (Number.isFinite(parsedVolume)) setVolume(Math.min(1, Math.max(0, parsedVolume)))
+      }
+    } catch {
+      // Storage can be unavailable in restricted browsing contexts.
     }
   }, [])
 
-  const toggleSound = async () => {
-    if (enabled) {
-      const context = contextRef.current
-      const master = masterRef.current
-      if (context && master && context.state !== 'closed') {
-        const stopAt = context.currentTime + 0.85
-        master.gain.cancelScheduledValues(context.currentTime)
-        master.gain.setTargetAtTime(0.0001, context.currentTime, 0.16)
-        voicesRef.current.forEach((voice) => voice.stop(stopAt))
-        window.setTimeout(() => {
-          if (context.state !== 'closed') void context.close()
-        }, 950)
-      }
-      contextRef.current = null
-      masterRef.current = null
-      voicesRef.current = []
-      setEnabled(false)
-      return
-    }
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.volume = volume
+  }, [volume])
 
-    if (!('AudioContext' in window)) {
-      setAvailable(false)
+  const toggleMusic = async () => {
+    const audio = audioRef.current
+    if (!audio || !available) return
+
+    if (enabled) {
+      audio.pause()
+      setEnabled(false)
+      setPreferred(false)
+      try {
+        window.localStorage.setItem(PREFERENCE_KEY, 'off')
+      } catch {
+        // Playback controls remain usable when storage is unavailable.
+      }
       return
     }
 
     try {
-      const context = new window.AudioContext()
-      contextRef.current = context
-      const filter = context.createBiquadFilter()
-      const master = context.createGain()
-      filter.type = 'lowpass'
-      filter.frequency.value = 150
-      filter.Q.value = 0.55
-      master.gain.setValueAtTime(0.0001, context.currentTime)
-      master.gain.exponentialRampToValueAtTime(0.011, context.currentTime + 1.6)
-      filter.connect(master)
-      master.connect(context.destination)
-
-      const voices = [55, 82.41].map((frequency, index) => {
-        const voice = context.createOscillator()
-        const level = context.createGain()
-        voice.type = index === 0 ? 'sine' : 'triangle'
-        voice.frequency.value = frequency
-        level.gain.value = index === 0 ? 0.72 : 0.22
-        voice.connect(level)
-        level.connect(filter)
-        voice.start()
-        return voice
-      })
-      const drift = context.createOscillator()
-      const driftDepth = context.createGain()
-      drift.type = 'sine'
-      drift.frequency.value = 0.075
-      driftDepth.gain.value = 18
-      drift.connect(driftDepth)
-      driftDepth.connect(filter.frequency)
-      drift.start()
-
-      await context.resume()
-      contextRef.current = context
-      masterRef.current = master
-      voicesRef.current = [...voices, drift]
+      await audio.play()
       setEnabled(true)
+      setPreferred(true)
+      window.localStorage.setItem(PREFERENCE_KEY, 'on')
     } catch {
-      if (contextRef.current && contextRef.current.state !== 'closed') void contextRef.current.close()
-      contextRef.current = null
-      setAvailable(false)
+      setEnabled(false)
+      setPreferred(false)
+      try {
+        window.localStorage.setItem(PREFERENCE_KEY, 'off')
+      } catch {
+        // Playback controls remain usable when storage is unavailable.
+      }
+    }
+  }
+
+  const updateVolume = (value: number) => {
+    setVolume(value)
+    try {
+      window.localStorage.setItem(VOLUME_KEY, String(value))
+    } catch {
+      // The selected volume still applies for this session.
     }
   }
 
   return (
-    <button
-      type="button"
-      onClick={toggleSound}
-      disabled={!available}
-      aria-label={available ? `Turn ambient sound ${enabled ? 'off' : 'on'}` : 'Ambient sound is unavailable'}
-      aria-pressed={enabled}
-      title={available ? `Ambient sound ${enabled ? 'on' : 'off'}` : 'Ambient sound is unavailable'}
-      className="inline-flex h-11 items-center gap-2 border border-silver/20 px-3 text-[9px] font-semibold tracking-[0.2em] text-silver uppercase transition-colors hover:border-electric/50 hover:text-ghost disabled:cursor-not-allowed disabled:opacity-40 md:px-4 md:text-[10px]"
-    >
-      {enabled ? <Volume2 aria-hidden="true" className="size-4 text-electric" /> : <VolumeX aria-hidden="true" className="size-4" />}
-      <span className="hidden sm:inline">Sound {enabled ? 'on' : 'off'}</span>
-    </button>
+    <div role="group" aria-label="Original background music controls" className="flex h-11 items-center gap-2 border border-silver/20 px-2.5 text-silver sm:px-3">
+      {ORIGINAL_TRACK && <audio ref={audioRef} src={ORIGINAL_TRACK} loop preload="none" />}
+      <button
+        type="button"
+        onClick={toggleMusic}
+        disabled={!available}
+        aria-label={available ? `Turn music ${enabled ? 'off' : 'on'}${preferred && !enabled ? ', saved preference is on' : ''}` : 'Music off — original track not available'}
+        aria-pressed={enabled}
+        title={available ? `Music ${enabled ? 'on' : 'off'}${preferred && !enabled ? ' — click to resume' : ''}` : 'Music off — original music file is missing'}
+        className="inline-flex h-full shrink-0 items-center gap-1.5 text-[9px] font-semibold tracking-[0.12em] uppercase transition-colors hover:text-ghost disabled:cursor-not-allowed disabled:opacity-75 sm:gap-2 sm:text-[10px]"
+      >
+        {enabled ? <Volume2 aria-hidden="true" className="size-4 text-electric" /> : <VolumeX aria-hidden="true" className="size-4" />}
+        <span>Music {enabled ? 'on' : 'off'}</span>
+      </button>
+      <label className="flex items-center" title={`Music volume ${Math.round(volume * 100)}%`}>
+        <span className="sr-only">Music volume</span>
+        <input
+          aria-label="Music volume"
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value={volume}
+          onChange={(event) => updateVolume(Number(event.target.value))}
+          className="h-1 w-10 cursor-pointer accent-electric sm:w-12"
+        />
+      </label>
+      <span className="sr-only" role="status">{available ? '' : 'Original music track is unavailable. Music is off.'}</span>
+    </div>
   )
 }

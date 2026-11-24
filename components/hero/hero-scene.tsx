@@ -1,7 +1,7 @@
 'use client'
 
 import { Component, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 
 function makeDotTexture() {
@@ -189,6 +189,20 @@ function GothicTower({ position, scale, rotation }: (typeof gothicTowers)[number
   )
 }
 
+function CameraChoreography() {
+  const { camera } = useThree()
+
+  useFrame((state, delta) => {
+    const scrollProgress = Math.min(window.scrollY / Math.max(window.innerHeight, 1), 1)
+    camera.position.x = THREE.MathUtils.damp(camera.position.x, state.pointer.x * 0.16, 0.7, delta)
+    camera.position.y = THREE.MathUtils.damp(camera.position.y, state.pointer.y * 0.08, 0.7, delta)
+    camera.position.z = THREE.MathUtils.damp(camera.position.z, 8 - scrollProgress * 0.32, 0.45, delta)
+    camera.lookAt(0, 0, -1.2)
+  })
+
+  return null
+}
+
 function GothicArchitecture() {
   const group = useRef<THREE.Group>(null)
 
@@ -271,16 +285,17 @@ function HeroCanvas() {
         frameloop={active ? 'always' : 'never'}
         eventSource={document.body}
         eventPrefix="client"
-        dpr={[1, 1.5]}
+        dpr={isMobile ? 1 : 1.5}
         camera={{ position: [0, 0, 8], fov: 55 }}
         gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
       >
+        <CameraChoreography />
         <ambientLight intensity={0.62} color="#c6a2ff" />
         <pointLight position={[-8, 4, 2]} intensity={26} color="#6426b8" distance={28} />
         <pointLight position={[8, 3, 0]} intensity={18} color="#9b4dff" distance={24} />
         <GothicArchitecture />
-        <Particles count={isMobile ? 350 : 900} />
-        <Feathers count={isMobile ? 10 : 22} />
+        <Particles count={isMobile ? 96 : 900} />
+        <Feathers count={isMobile ? 6 : 22} />
       </Canvas>
     </div>
   )

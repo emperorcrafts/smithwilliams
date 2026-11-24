@@ -141,9 +141,9 @@ export function Hero() {
       />
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-obsidian via-obsidian/85 to-transparent lg:h-[28%]" />
 
-      <div className="hero-content relative mx-auto flex min-h-svh max-w-[1600px] flex-col justify-end px-5 pt-28 pb-14 md:px-10 lg:justify-center lg:pb-24">
+      <div className="hero-content relative mx-auto flex min-h-svh max-w-[1600px] flex-col justify-end px-5 pt-24 pb-10 md:px-10 md:pb-14 lg:justify-center lg:pb-24">
         <div className="max-w-4xl">
-          <p className="hero-fade mb-6 flex items-center gap-4 text-[11px] font-medium tracking-[0.5em] text-electric uppercase">
+          <p className="hero-fade mb-4 flex items-center gap-3 text-[10px] font-medium tracking-[0.38em] text-electric uppercase sm:mb-6 sm:gap-4 sm:text-[11px] sm:tracking-[0.5em]">
             <span aria-hidden="true" className="h-px w-10 bg-electric" />
             The Dark Creator
           </p>
@@ -157,20 +157,28 @@ export function Hero() {
             </span>
           </h1>
 
-          <div className="hero-rule mt-6 h-px w-full max-w-md origin-left bg-gradient-to-r from-silver/60 to-transparent" />
+          <div className="hero-rule mt-4 h-px w-full max-w-md origin-left bg-gradient-to-r from-silver/60 to-transparent sm:mt-6" />
 
-          <p className="hero-fade mt-6 text-sm font-medium tracking-[0.45em] text-ghost uppercase md:text-base">
+          <p className="hero-fade mt-4 text-[11px] font-medium tracking-[0.28em] text-ghost uppercase sm:mt-6 sm:text-sm sm:tracking-[0.45em] md:text-base">
             Gamer. Designer. Developer.
           </p>
-          <p className="hero-fade mt-4 max-w-md text-pretty leading-relaxed text-muted-foreground">
+          <p className="hero-fade mt-3 max-w-md text-pretty text-[13px] leading-[1.65] text-muted-foreground sm:mt-4 sm:text-base sm:leading-relaxed">
             {"I don't follow reality. I create it — through streams, striking visuals and cinematic websites built for brands that refuse to blend in."}
           </p>
 
-          <div className="hero-fade mt-10 flex flex-wrap items-center gap-4">
-            <CtaLink href="#realms">Explore my universe</CtaLink>
-              <CtaLink href="#contact" variant="ghost">
-                Find me beyond the realm
-              </CtaLink>
+          <div className="hero-fade mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 sm:mt-10 sm:gap-4">
+            <CtaLink href="#realms" className="px-4 py-3 text-[9px] tracking-[0.2em] sm:px-7 sm:py-4 sm:text-[11px] sm:tracking-[0.32em]">
+              <span className="sm:hidden">Explore universe</span>
+              <span className="hidden sm:inline">Explore my universe</span>
+            </CtaLink>
+            <CtaLink
+              href="#contact"
+              variant="ghost"
+              className="border-0 px-0 py-2 text-[9px] tracking-[0.2em] text-silver sm:border sm:px-7 sm:py-4 sm:text-[11px] sm:tracking-[0.32em]"
+            >
+              <span className="sm:hidden">Socials</span>
+              <span className="hidden sm:inline">Find me beyond the realm</span>
+            </CtaLink>
           </div>
         </div>
       </div>
