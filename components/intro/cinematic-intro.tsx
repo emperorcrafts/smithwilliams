@@ -26,6 +26,7 @@ const feathers = [
 export function CinematicIntro() {
   const [mounted, setMounted] = useState(true)
   const [loadedAssets, setLoadedAssets] = useState(0)
+  const [entryReady, setEntryReady] = useState(false)
   const progress = Math.round((loadedAssets / 2) * 100)
   const root = useRef<HTMLDivElement>(null)
   const timeline = useRef<gsap.core.Timeline | null>(null)
@@ -38,9 +39,12 @@ export function CinematicIntro() {
   }, [])
 
   const skip = useCallback(() => {
+    window.dispatchEvent(new Event('sw:enter-dark-realm'))
     timeline.current?.kill()
     gsap.to(root.current, { autoAlpha: 0, duration: 0.5, ease: 'power2.out', onComplete: finish })
   }, [finish])
+
+  const enterRealm = useCallback(() => skip(), [skip])
 
   useLayoutEffect(() => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -50,11 +54,11 @@ export function CinematicIntro() {
     }
 
     document.documentElement.classList.add('intro-lock')
-    root.current?.querySelector<HTMLButtonElement>('button')?.focus({ preventScroll: true })
+    root.current?.querySelector<HTMLButtonElement>('.intro-skip')?.focus({ preventScroll: true })
 
     const ctx = gsap.context(() => {
       gsap.set('.intro-char', { scale: 7, y: '33vh', filter: 'brightness(0)' })
-      gsap.set('.intro-eyes, .intro-blade, .intro-logo-wrap, .intro-feather, .intro-particle, .intro-caption', {
+      gsap.set('.intro-eyes, .intro-blade, .intro-logo-wrap, .intro-feather, .intro-particle, .intro-caption, .intro-runes', {
         autoAlpha: 0,
       })
       gsap.set('.intro-logo', { clipPath: 'inset(0% 100% 0% 0%)' })
@@ -65,6 +69,8 @@ export function CinematicIntro() {
       // Scene 1 — particles emerge from darkness
       tl.to('.intro-particle', { autoAlpha: 1, duration: 1.2, stagger: { each: 0.03, from: 'random' } }, 0.2)
         .to('.intro-particle', { y: -40, duration: 6, ease: 'none' }, 0.2)
+        .to('.intro-runes', { autoAlpha: 1, duration: 0.9 }, 0.35)
+        .to('.intro-runes', { autoAlpha: 0, duration: 0.55 }, 1.25)
         .to('.intro-caption', { autoAlpha: 1, duration: 0.8 }, 0.6)
 
         // Scene 2 — eyes ignite
@@ -92,10 +98,8 @@ export function CinematicIntro() {
         .to('.intro-logo-wrap', { autoAlpha: 1, duration: 0.4 }, 6)
         .to('.intro-logo', { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.3, ease: 'expo.inOut' }, 6)
         .fromTo('.intro-shine', { xPercent: -120 }, { xPercent: 120, duration: 1.4, ease: 'power2.inOut' }, 6.9)
-
-        // Scene 6 — reveal homepage
-        .to(root.current, { autoAlpha: 0, duration: 0.9, ease: 'power2.inOut' }, 8.4)
-        .call(finish)
+        .to('.intro-enter', { autoAlpha: 1, y: 0, duration: 0.65, ease: 'power2.out' }, 3.2)
+        .call(() => setEntryReady(true), [], 3.2)
     }, root)
 
     return () => {
@@ -116,7 +120,10 @@ export function CinematicIntro() {
         if (event.key === 'Escape') skip()
         if (event.key === 'Tab') {
           event.preventDefault()
-          root.current?.querySelector<HTMLButtonElement>('button')?.focus()
+          const visibleControls = Array.from(root.current?.querySelectorAll<HTMLButtonElement>('button') ?? [])
+            .filter((button) => Number(window.getComputedStyle(button).opacity) > 0.05)
+          const current = visibleControls.indexOf(document.activeElement as HTMLButtonElement)
+          visibleControls[(current + 1) % visibleControls.length]?.focus()
         }
       }}
       className="fixed inset-0 z-[150] overflow-hidden bg-obsidian"
@@ -137,6 +144,9 @@ export function CinematicIntro() {
         ))}
       </div>
 
+      <p aria-hidden="true" className="intro-runes absolute inset-x-0 top-[43%] text-center font-display text-[15px] tracking-[0.9em] text-[#cba4f4] [text-shadow:0_0_22px_rgba(180,112,255,0.82)] sm:text-lg">
+        ᚷ · ᚨ · ᛟ · ᚱ · ᚠ
+      </p>
       <p className="intro-caption absolute inset-x-0 top-[62%] text-center font-display text-xs tracking-[0.6em] text-silver/70 uppercase">
         From the darkness
       </p>
@@ -258,8 +268,17 @@ export function CinematicIntro() {
 
       <button
         type="button"
+        onClick={enterRealm}
+        disabled={!entryReady}
+        aria-hidden={!entryReady}
+        className="intro-enter absolute bottom-[154px] left-1/2 z-10 -translate-x-1/2 translate-y-3 border border-[#c8a8ec]/65 bg-[#0b0812]/75 px-8 py-4 text-[10px] font-medium tracking-[0.38em] text-[#eee7f5] uppercase opacity-0 backdrop-blur-sm transition-colors hover:border-[#eadbfa] hover:bg-[#21152d] focus-visible:outline-2 focus-visible:outline-[#d2b2f0] sm:bottom-[164px]"
+      >
+        Enter the Dark Realm
+      </button>
+      <button
+        type="button"
         onClick={skip}
-        className="absolute right-5 bottom-6 z-10 flex items-center gap-3 border border-silver/25 bg-obsidian/60 px-5 py-2.5 text-[11px] font-medium tracking-[0.35em] text-silver uppercase backdrop-blur transition-colors hover:border-electric hover:text-ghost focus-visible:outline-2 focus-visible:outline-electric md:right-10 md:bottom-10"
+        className="intro-skip absolute right-5 bottom-6 z-10 flex items-center gap-3 border border-silver/25 bg-obsidian/60 px-5 py-2.5 text-[11px] font-medium tracking-[0.35em] text-silver uppercase backdrop-blur transition-colors hover:border-electric hover:text-ghost focus-visible:outline-2 focus-visible:outline-electric md:right-10 md:bottom-10"
       >
         Skip intro
         <span aria-hidden="true" className="h-px w-6 bg-current" />
