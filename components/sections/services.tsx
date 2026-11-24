@@ -1,13 +1,12 @@
 import { Check } from 'lucide-react'
 import { RevealSection } from '@/components/motion/reveal'
 import { SectionHeading } from '@/components/site/section-heading'
-import { QuoteButton } from './quote-button'
+import { ProjectConnectLink } from './project-connect-link'
 
 const services = [
   {
     index: 'I',
     title: 'Graphic Design',
-    service: 'graphic-design',
     summary:
       'Visual identities and artwork that make your brand feel legendary — from the first logo sketch to a full social media system.',
     items: [
@@ -21,7 +20,6 @@ const services = [
   {
     index: 'II',
     title: 'Web Development',
-    service: 'web-development',
     summary:
       'Fast, responsive and memorable websites — designed and built end-to-end, ready to grow with your business.',
     items: [
@@ -81,7 +79,7 @@ export function Services() {
                 ))}
               </ul>
               <div className="relative mt-12">
-                <QuoteButton service={s.service} />
+                <ProjectConnectLink />
               </div>
             </article>
           ))}

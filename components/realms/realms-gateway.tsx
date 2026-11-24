@@ -51,12 +51,12 @@ export function RealmsGateway() {
           </p>
         </div>
 
-        <ul className="mt-16 grid gap-px overflow-hidden border border-border bg-border md:mt-24 lg:grid-cols-3">
+        <ul className="mt-16 grid gap-5 md:mt-24 lg:grid-cols-3">
           {realms.map((realm) => (
-            <li key={realm.index} data-reveal className="bg-obsidian">
+            <li key={realm.index} data-reveal className="min-w-0">
               <a
                 href={realm.href}
-                className="group relative flex h-full min-h-[440px] flex-col justify-between overflow-hidden p-8 md:min-h-[560px] md:p-10"
+                className="group relative flex h-full min-h-[440px] flex-col justify-between overflow-hidden rounded-t-full rounded-b-sm border border-border p-8 transition-colors duration-700 hover:border-electric/50 md:min-h-[560px] md:p-10"
               >
                 <Image
                   src={realm.image}
@@ -66,6 +66,8 @@ export function RealmsGateway() {
                   className="object-cover opacity-25 grayscale transition-all duration-1000 ease-out group-hover:scale-105 group-hover:opacity-55 group-hover:grayscale-0"
                 />
                 <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/60 to-obsidian/30" />
+                <div aria-hidden="true" className="pointer-events-none absolute inset-4 rounded-t-full rounded-b-sm border border-silver/15 transition-all duration-700 group-hover:inset-3 group-hover:border-electric/35" />
+                <div aria-hidden="true" className="absolute inset-x-[20%] bottom-0 h-14 bg-[radial-gradient(ellipse_at_bottom,rgba(100,38,184,0.42),transparent_72%)] opacity-70 transition-opacity duration-700 group-hover:opacity-100" />
                 <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-electric transition-transform duration-700 group-hover:scale-x-100" />
 
                 <div className="relative flex items-start justify-between">
