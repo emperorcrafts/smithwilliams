@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Volume2, VolumeX } from 'lucide-react'
 
 const ORIGINAL_TRACK = '/audio/smith-williams-original.mp3'
-const ORIGINAL_TRACK_AVAILABLE = false
+const ORIGINAL_TRACK_AVAILABLE = true
 const VOLUME_KEY = 'sw-music-volume'
 const PREFERENCE_KEY = 'sw-music-preferred'
 
