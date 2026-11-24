@@ -5,7 +5,7 @@ import { socialLinks } from '@/lib/site'
 
 export function Contact() {
   return (
-    <RevealSection id="contact" aria-labelledby="contact-title" className="relative isolate overflow-hidden bg-obsidian py-28 md:py-40">
+    <RevealSection id="contact" aria-labelledby="contact-title" className="relative isolate overflow-hidden bg-transparent py-28 md:py-40">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[radial-gradient(ellipse_at_50%_15%,rgba(100,38,184,0.19),transparent_58%),radial-gradient(ellipse_at_50%_100%,rgba(25,12,43,0.55),transparent_55%)]"

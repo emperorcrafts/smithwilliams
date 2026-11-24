@@ -4,6 +4,7 @@ import { Cursor } from '@/components/motion/cursor'
 import { SiteNav } from '@/components/site/site-nav'
 import { SiteFooter } from '@/components/site/site-footer'
 import { Hero } from '@/components/hero/hero'
+import { WorldLoader } from '@/components/hero/world-loader'
 import { RealmsGateway } from '@/components/realms/realms-gateway'
 import { GamingRealm } from '@/components/realms/gaming-realm'
 import { CreativeRealm } from '@/components/realms/creative-realm'
@@ -20,6 +21,7 @@ export default function Page() {
       <CinematicIntro />
       <SmoothScroll />
       <Cursor />
+      <WorldLoader />
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[300] focus:bg-ghost focus:px-4 focus:py-2 focus:text-obsidian"
@@ -27,7 +29,7 @@ export default function Page() {
         Skip to content
       </a>
       <SiteNav />
-      <main id="main" className="grain">
+      <main id="main" className="grain relative z-10">
         <Hero />
         <RealmsGateway />
         <GamingRealm />

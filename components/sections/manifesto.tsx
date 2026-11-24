@@ -29,7 +29,7 @@ export function Manifesto() {
   }, [])
 
   return (
-    <div ref={ref} aria-label="I play. I design. I build." role="img" className="overflow-hidden border-y border-border bg-obsidian py-10 md:py-14">
+    <div ref={ref} aria-label="I play. I design. I build." role="img" className="overflow-hidden border-y border-border bg-obsidian/40 py-10 backdrop-blur-[2px] md:py-14">
       <div aria-hidden="true" className="manifesto-row flex w-max gap-12 whitespace-nowrap">
         {Array.from({ length: 4 }).flatMap((_, r) =>
           words.map((w, i) => (

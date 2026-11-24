@@ -31,7 +31,7 @@ const caseStudies = [
 
 export function DigitalKingdom() {
   return (
-    <RevealSection id="digital" aria-labelledby="digital-title" className="overflow-hidden bg-abyss py-28 md:py-40">
+    <RevealSection id="digital" aria-labelledby="digital-title" className="overflow-hidden bg-transparent py-28 md:py-40">
       <div aria-hidden="true" className="absolute top-0 right-0 h-[60%] w-[60%] bg-[radial-gradient(ellipse_at_top_right,rgba(100,38,184,0.18),transparent_60%)]" />
 
       <div className="relative mx-auto max-w-[1600px] px-5 md:px-10">
