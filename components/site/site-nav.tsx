@@ -6,6 +6,7 @@ import { Menu, X } from 'lucide-react'
 import { navLinks } from '@/lib/site'
 import { cn } from '@/lib/utils'
 import { Magnetic } from '@/components/motion/magnetic'
+import { SoundToggle } from '@/components/motion/sound-toggle'
 
 export function SiteNav() {
   const [scrolled, setScrolled] = useState(false)
@@ -59,12 +60,13 @@ export function SiteNav() {
         </ul>
 
         <div className="flex items-center gap-3">
+          <SoundToggle />
           <Magnetic>
             <a
               href="#contact"
               className="hidden border border-electric/60 px-5 py-2.5 text-[11px] font-semibold tracking-[0.3em] text-ghost uppercase transition-colors hover:bg-royal sm:inline-flex"
             >
-              Hire me
+              Find me
             </a>
           </Magnetic>
           <button
@@ -82,7 +84,7 @@ export function SiteNav() {
 
       <div id="mobile-menu" hidden={!open} className="border-t border-border lg:hidden">
         <ul className="flex flex-col px-5 py-6">
-          {[...navLinks, { label: 'Hire me', href: '#contact' }].map((link) => (
+          {[...navLinks, { label: 'Find me', href: '#contact' }].map((link) => (
             <li key={link.label}>
               <a
                 href={link.href}

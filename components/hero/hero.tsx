@@ -168,9 +168,9 @@ export function Hero() {
 
           <div className="hero-fade mt-10 flex flex-wrap items-center gap-4">
             <CtaLink href="#realms">Explore my universe</CtaLink>
-            <CtaLink href="#contact" variant="ghost">
-              Hire me
-            </CtaLink>
+              <CtaLink href="#contact" variant="ghost">
+                Find me beyond the realm
+              </CtaLink>
           </div>
         </div>
       </div>

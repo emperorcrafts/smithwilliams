@@ -22,12 +22,7 @@ function createStore<T>(initial: T) {
 }
 
 export const introStore = createStore(false)
-export const quoteStore = createStore<string>('')
 
 export function useIntroDone() {
   return useSyncExternalStore(introStore.subscribe, introStore.get, () => false)
-}
-
-export function useQuotePreset() {
-  return useSyncExternalStore(quoteStore.subscribe, quoteStore.get, () => '')
 }

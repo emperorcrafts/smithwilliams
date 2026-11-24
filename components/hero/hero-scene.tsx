@@ -153,6 +153,69 @@ function Feathers({ count }: { count: number }) {
   )
 }
 
+const gothicTowers = [
+  { position: [-8.8, -3.5, -4.5] as [number, number, number], scale: 1.35, rotation: 0.08 },
+  { position: [-5.9, -3.7, -8] as [number, number, number], scale: 0.82, rotation: -0.05 },
+  { position: [8.8, -3.4, -4] as [number, number, number], scale: 1.42, rotation: -0.08 },
+  { position: [5.8, -3.8, -8.5] as [number, number, number], scale: 0.78, rotation: 0.05 },
+]
+
+function GothicTower({ position, scale, rotation }: (typeof gothicTowers)[number]) {
+  return (
+    <group position={position} scale={scale} rotation={[0, rotation, 0]}>
+      <mesh position={[0, 1.2, 0]}>
+        <boxGeometry args={[1.45, 2.4, 1.35]} />
+        <meshStandardMaterial color="#100c18" metalness={0.75} roughness={0.48} />
+      </mesh>
+      <mesh position={[0, 2.65, 0]}>
+        <boxGeometry args={[1.95, 0.3, 1.8]} />
+        <meshStandardMaterial color="#191224" metalness={0.8} roughness={0.42} />
+      </mesh>
+      <mesh position={[0, 4.05, 0]} rotation={[0, Math.PI / 4, 0]}>
+        <coneGeometry args={[0.86, 2.7, 4]} />
+        <meshStandardMaterial color="#0b0812" metalness={0.68} roughness={0.4} />
+      </mesh>
+      {[-0.42, 0, 0.42].map((x) => (
+        <mesh key={x} position={[x, 1.24, 0.69]}>
+          <boxGeometry args={[0.12, 0.72, 0.025]} />
+          <meshBasicMaterial color="#9b4dff" transparent opacity={x === 0 ? 0.62 : 0.38} />
+        </mesh>
+      ))}
+      <mesh position={[0, -0.16, 0]}>
+        <boxGeometry args={[2.3, 0.38, 2.05]} />
+        <meshStandardMaterial color="#0b0812" metalness={0.82} roughness={0.36} />
+      </mesh>
+    </group>
+  )
+}
+
+function GothicArchitecture() {
+  const group = useRef<THREE.Group>(null)
+
+  useFrame((state) => {
+    if (!group.current) return
+    const time = state.clock.elapsedTime
+    group.current.rotation.y = THREE.MathUtils.damp(group.current.rotation.y, state.pointer.x * 0.025, 1.2, 1 / 60)
+    group.current.position.y = Math.sin(time * 0.18) * 0.07
+  })
+
+  return (
+    <group ref={group}>
+      {gothicTowers.map((tower, index) => (
+        <GothicTower key={index} {...tower} />
+      ))}
+      <mesh position={[0, -2.25, -7]}>
+        <boxGeometry args={[13.5, 0.55, 1.25]} />
+        <meshStandardMaterial color="#100c18" metalness={0.8} roughness={0.5} />
+      </mesh>
+      <mesh position={[0, -1.94, -6.35]}>
+        <boxGeometry args={[12.8, 0.035, 0.035]} />
+        <meshBasicMaterial color="#6426b8" transparent opacity={0.55} />
+      </mesh>
+    </group>
+  )
+}
+
 class SceneBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false }
   static getDerivedStateFromError() {
@@ -212,6 +275,10 @@ function HeroCanvas() {
         camera={{ position: [0, 0, 8], fov: 55 }}
         gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
       >
+        <ambientLight intensity={0.62} color="#c6a2ff" />
+        <pointLight position={[-8, 4, 2]} intensity={26} color="#6426b8" distance={28} />
+        <pointLight position={[8, 3, 0]} intensity={18} color="#9b4dff" distance={24} />
+        <GothicArchitecture />
         <Particles count={isMobile ? 350 : 900} />
         <Feathers count={isMobile ? 10 : 22} />
       </Canvas>
