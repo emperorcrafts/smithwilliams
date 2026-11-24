@@ -55,8 +55,8 @@ export function ContactForm() {
   }
 
   return (
-    <form action={action} noValidate className="relative border border-border bg-abyss/80 p-8 backdrop-blur md:p-12">
-      <div className="grid gap-10 md:grid-cols-2">
+    <form action={action} noValidate aria-label="Project enquiry" className="relative border border-border bg-abyss/80 p-6 backdrop-blur md:p-12">
+      <div className="grid gap-8 md:grid-cols-2 md:gap-10">
         <Field id="name" label="Name" error={errors.name}>
           <input
             id="name"
@@ -108,6 +108,27 @@ export function ContactForm() {
         <Field id="budget" label="Budget (optional)">
           <input id="budget" name="budget" defaultValue={values?.budget} placeholder="e.g. $500 – $2,000" className={fieldClass} />
         </Field>
+        <Field id="deadline" label="Expected deadline (optional)">
+          <input
+            id="deadline"
+            name="deadline"
+            defaultValue={values?.deadline}
+            placeholder="Flexible or date"
+            className={fieldClass}
+          />
+        </Field>
+        <div className="md:col-span-2">
+          <Field id="references" label="Reference links (optional)">
+            <textarea
+              id="references"
+              name="references"
+              rows={2}
+              defaultValue={values?.references}
+              placeholder="Portfolio, inspiration, or project links"
+              className={cn(fieldClass, 'resize-y')}
+            />
+          </Field>
+        </div>
         <div className="md:col-span-2">
           <Field id="message" label="Project details" error={errors.message}>
             <textarea
@@ -134,7 +155,11 @@ export function ContactForm() {
         <p aria-live="polite" className={cn('text-sm', state.status === 'error' ? 'text-destructive' : 'text-muted-foreground')}>
           {state.status === 'error' ? state.message : 'Usually replies within 48 hours.'}
         </p>
-        <button type="submit" disabled={pending} className={cn(ctaClasses.base, ctaClasses.primary, 'disabled:opacity-60')}>
+        <button
+          type="submit"
+          disabled={pending}
+          className={cn(ctaClasses.base, ctaClasses.primary, 'whitespace-nowrap text-[10px] tracking-[0.16em] disabled:opacity-60')}
+        >
           <span className="relative z-10">{pending ? 'Sending' : 'Send enquiry'}</span>
           {pending ? (
             <Loader2 aria-hidden="true" className="relative z-10 size-4 animate-spin" />

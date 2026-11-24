@@ -19,7 +19,7 @@ export function Contact() {
                 <span className="text-violet-metal">something legendary.</span>
               </>
             }
-            description="Tell me about your brand, your stream or your next website. I reply to every serious enquiry."
+            description="Use one of the social links to reach me directly. This enquiry form does not send or store messages."
           />
           <div data-reveal className="mt-12">
             <p className="text-[11px] tracking-[0.45em] text-silver/70 uppercase">Find me</p>

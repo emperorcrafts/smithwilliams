@@ -6,7 +6,15 @@ export type ContactState = {
   status: 'idle' | 'success' | 'error'
   message: string
   errors?: Partial<Record<'name' | 'email' | 'service' | 'message', string>>
-  values?: { name: string; email: string; service: string; budget: string; message: string }
+  values?: {
+    name: string
+    email: string
+    service: string
+    budget: string
+    deadline: string
+    references: string
+    message: string
+  }
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
@@ -21,6 +29,8 @@ export async function submitContact(_prev: ContactState, formData: FormData): Pr
   const email = String(formData.get('email') ?? '').trim()
   const service = String(formData.get('service') ?? '').trim()
   const budget = String(formData.get('budget') ?? '').trim().slice(0, 60)
+  const deadline = String(formData.get('deadline') ?? '').trim().slice(0, 80)
+  const references = String(formData.get('references') ?? '').trim().slice(0, 1000)
   const message = String(formData.get('message') ?? '').trim()
 
   const errors: ContactState['errors'] = {}
@@ -34,15 +44,14 @@ export async function submitContact(_prev: ContactState, formData: FormData): Pr
       status: 'error',
       message: 'Please fix the highlighted fields.',
       errors,
-      values: { name, email, service, budget, message },
+      values: { name, email, service, budget, deadline, references, message },
     }
   }
 
-  // Delivery hook: connect an email provider (e.g. Resend) here to forward enquiries.
-  console.log('[contact] New enquiry', { name, email, service, budget, length: message.length })
-
   return {
-    status: 'success',
-    message: `Thanks, ${name.split(' ')[0]} — your enquiry has been received. I will reply to ${email} soon.`,
+    status: 'error',
+    message:
+      'Your details are valid, but this form is not connected to email delivery. Nothing was sent. Please contact Smith Williams through one of the social links instead.',
+    values: { name, email, service, budget, deadline, references, message },
   }
 }
