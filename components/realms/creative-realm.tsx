@@ -6,7 +6,7 @@ const disciplines = ['Logo design', 'Branding', 'Posters', 'Thumbnails', 'Social
 
 export function CreativeRealm() {
   return (
-    <RevealSection id="creative" aria-labelledby="creative-title" className="overflow-hidden bg-obsidian py-28 md:py-40">
+    <RevealSection id="creative" aria-labelledby="creative-title" className="overflow-hidden bg-transparent py-28 md:py-40">
       <div className="mx-auto max-w-[1600px] px-5 md:px-10">
         <div className="grid gap-12 lg:grid-cols-12 lg:items-end">
           <SectionHeading

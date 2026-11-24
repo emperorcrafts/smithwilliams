@@ -3,7 +3,7 @@ import { navLinks, socialLinks } from '@/lib/site'
 
 export function SiteFooter() {
   return (
-    <footer className="relative isolate overflow-hidden border-t border-border bg-obsidian">
+    <footer id="final-exit" className="relative isolate z-10 overflow-hidden border-t border-border bg-obsidian/55 backdrop-blur-sm">
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-[radial-gradient(ellipse_at_50%_0%,rgba(100,38,184,0.2),transparent_68%)]" />
       <div className="relative mx-auto grid max-w-[1600px] gap-14 px-5 py-20 md:px-10 lg:grid-cols-12">
         <div className="lg:col-span-5">

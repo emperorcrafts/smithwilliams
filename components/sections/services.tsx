@@ -40,7 +40,7 @@ const process = [
 
 export function Services() {
   return (
-    <RevealSection id="services" aria-labelledby="services-title" className="bg-obsidian py-28 md:py-40">
+    <RevealSection id="services" aria-labelledby="services-title" className="bg-transparent py-28 md:py-40">
       <div className="mx-auto max-w-[1600px] px-5 md:px-10">
         <SectionHeading
           id="services-title"

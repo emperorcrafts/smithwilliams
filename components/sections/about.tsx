@@ -19,7 +19,7 @@ const skills = [
 
 export function About() {
   return (
-    <RevealSection id="about" aria-labelledby="about-title" className="overflow-hidden bg-abyss py-28 md:py-40">
+    <RevealSection id="about" aria-labelledby="about-title" className="overflow-hidden bg-transparent py-28 md:py-40">
       <div className="mx-auto grid max-w-[1600px] gap-16 px-5 md:px-10 lg:grid-cols-12 lg:gap-10">
         <div className="relative lg:col-span-5">
           <div data-reveal-img className="relative aspect-[4/5] overflow-hidden border border-border bg-[radial-gradient(ellipse_at_50%_30%,#2a1450,#050407_70%)]">

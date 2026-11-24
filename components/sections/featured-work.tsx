@@ -68,7 +68,7 @@ export function FeaturedWork() {
   }, [])
 
   return (
-    <section ref={section} id="work" aria-labelledby="work-title" className="relative overflow-hidden bg-obsidian py-24 lg:flex lg:h-svh lg:flex-col lg:justify-center lg:pt-20 lg:pb-0">
+    <section ref={section} id="work" aria-labelledby="work-title" className="relative overflow-hidden bg-transparent py-24 lg:flex lg:h-svh lg:flex-col lg:justify-center lg:pt-20 lg:pb-0">
       <div className="mx-auto mb-12 flex w-full max-w-[1600px] items-end justify-between gap-6 px-5 md:px-10 lg:mb-14">
         <div>
           <p className="mb-4 flex items-center gap-4 text-[11px] font-medium tracking-[0.45em] text-electric uppercase">

@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useLayoutEffect, useRef } from 'react'
-import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -9,8 +8,6 @@ import { useIntroDone } from '@/lib/stores'
 import { CtaLink } from '@/components/site/cta-link'
 
 gsap.registerPlugin(ScrollTrigger)
-
-const HeroScene = dynamic(() => import('./hero-scene'), { ssr: false })
 
 export function Hero() {
   const root = useRef<HTMLElement>(null)
@@ -77,7 +74,7 @@ export function Hero() {
       ref={root}
       id="top"
       aria-labelledby="hero-title"
-      className="relative isolate min-h-svh overflow-hidden bg-obsidian"
+      className="relative isolate min-h-svh overflow-hidden bg-transparent"
     >
       <div aria-hidden="true" data-depth="0.25" className="absolute -inset-10 -z-30">
         <Image
@@ -86,20 +83,16 @@ export function Hero() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-center opacity-45"
+          className="object-cover object-center opacity-25 mix-blend-screen"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-obsidian via-obsidian/70 to-obsidian/20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-transparent to-obsidian/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-obsidian/85 via-obsidian/50 to-obsidian/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-obsidian/85 via-transparent to-obsidian/45" />
       </div>
 
       <div
         aria-hidden="true"
         className="lightning-flash absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_75%_10%,rgba(155,77,255,0.35),transparent_55%)] mix-blend-screen"
       />
-
-      <div className="absolute inset-0 -z-10">
-        <HeroScene />
-      </div>
 
       <div aria-hidden="true" className="fog absolute inset-x-[-20%] bottom-[-10%] -z-10 h-[55%] bg-[radial-gradient(ellipse_at_center,rgba(100,38,184,0.22),transparent_65%)] blur-2xl" />
 

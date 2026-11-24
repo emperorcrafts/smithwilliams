@@ -25,6 +25,8 @@ const feathers = [
 
 export function CinematicIntro() {
   const [mounted, setMounted] = useState(true)
+  const [loadedAssets, setLoadedAssets] = useState(0)
+  const progress = Math.round((loadedAssets / 2) * 100)
   const root = useRef<HTMLDivElement>(null)
   const timeline = useRef<gsap.core.Timeline | null>(null)
 
@@ -48,6 +50,7 @@ export function CinematicIntro() {
     }
 
     document.documentElement.classList.add('intro-lock')
+    root.current?.querySelector<HTMLButtonElement>('button')?.focus({ preventScroll: true })
 
     const ctx = gsap.context(() => {
       gsap.set('.intro-char', { scale: 7, y: '33vh', filter: 'brightness(0)' })
@@ -108,6 +111,14 @@ export function CinematicIntro() {
       ref={root}
       role="dialog"
       aria-label="Cinematic introduction"
+      aria-modal="true"
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') skip()
+        if (event.key === 'Tab') {
+          event.preventDefault()
+          root.current?.querySelector<HTMLButtonElement>('button')?.focus()
+        }
+      }}
       className="fixed inset-0 z-[150] overflow-hidden bg-obsidian"
     >
       <div aria-hidden="true" className="absolute inset-0">
@@ -141,6 +152,7 @@ export function CinematicIntro() {
             fill
             priority
             sizes="60vh"
+            onLoad={() => setLoadedAssets((current) => Math.min(current + 1, 2))}
             className="object-contain"
           />
           {[
@@ -207,6 +219,7 @@ export function CinematicIntro() {
               width={517}
               height={483}
               priority
+              onLoad={() => setLoadedAssets((current) => Math.min(current + 1, 2))}
               className="h-auto w-full"
             />
             <span
@@ -227,6 +240,21 @@ export function CinematicIntro() {
         className="pointer-events-none absolute inset-0"
         style={{ background: 'radial-gradient(ellipse at center, transparent 40%, rgba(5,4,7,0.9) 100%)' }}
       />
+
+      <div className="absolute bottom-20 left-5 z-10 w-[min(72vw,280px)] md:bottom-10 md:left-10">
+        <p className="font-display text-[9px] tracking-[0.22em] text-ghost uppercase sm:text-[10px]">Entering the Dark Realm</p>
+        <p className="mt-2 text-[9px] tracking-[0.3em] text-silver/60 uppercase">Key art · {progress}%</p>
+        <div
+          role="progressbar"
+          aria-label="Key art loading progress"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={progress}
+          className="mt-3 h-px overflow-hidden bg-silver/20"
+        >
+          <span className="block h-full bg-gradient-to-r from-royal to-silver transition-[width] duration-700 ease-out" style={{ width: `${progress}%` }} />
+        </div>
+      </div>
 
       <button
         type="button"

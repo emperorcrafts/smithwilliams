@@ -42,7 +42,7 @@ function HudCorners() {
 
 export function GamingRealm() {
   return (
-    <RevealSection id="gaming" aria-labelledby="gaming-title" className="overflow-hidden bg-abyss py-28 md:py-40">
+    <RevealSection id="gaming" aria-labelledby="gaming-title" className="overflow-hidden bg-transparent py-28 md:py-40">
       <div
         aria-hidden="true"
         className="absolute inset-0 opacity-[0.07]"

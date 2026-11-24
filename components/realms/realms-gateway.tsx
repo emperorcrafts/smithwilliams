@@ -32,7 +32,7 @@ const realms = [
 
 export function RealmsGateway() {
   return (
-    <RevealSection id="realms" aria-labelledby="realms-title" className="bg-obsidian py-28 md:py-40">
+    <RevealSection id="realms" aria-labelledby="realms-title" className="bg-transparent py-28 md:py-40">
       <div className="mx-auto max-w-[1600px] px-5 md:px-10">
         <div className="flex flex-col justify-between gap-10 lg:flex-row lg:items-end">
           <SectionHeading
