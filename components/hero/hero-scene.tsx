@@ -183,8 +183,11 @@ function HeroCanvas() {
       // Skip software renderers: the 2.5D layers already carry the scene without WebGL.
       const attrs = { failIfMajorPerformanceCaveat: true }
       const gl = (c.getContext('webgl2', attrs) ?? c.getContext('webgl', attrs)) as WebGLRenderingContext | null
-      gl?.getExtension('WEBGL_lose_context')?.loseContext()
-      return !!gl
+      if (!gl) return false
+      const rendererInfo = gl.getExtension('WEBGL_debug_renderer_info')
+      const renderer = rendererInfo ? gl.getParameter(rendererInfo.UNMASKED_RENDERER_WEBGL) : ''
+      gl.getExtension('WEBGL_lose_context')?.loseContext()
+      return !/swiftshader|llvmpipe|software/i.test(renderer)
     } catch {
       return false
     }
